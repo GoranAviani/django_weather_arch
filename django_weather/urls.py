@@ -13,11 +13,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
 from django.contrib import admin
 from django.urls import include, path
 
+
+class GoolgeAuth(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dj-rest-auth/', include('dj_rest_auth.urls'))
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('api/v1/rest-auth/google_auth/', GoolgeAuth.as_view(), name='google_login'),
 
 ]
